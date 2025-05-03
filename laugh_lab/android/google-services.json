@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "425322934033",
+    "firebase_url": "https://laughlab-199f6-default-rtdb.firebaseio.com",
+    "project_id": "laughlab-199f6",
+    "storage_bucket": "laughlab-199f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425322934033:android:33feb816551ad9b0b4a6b0",
+        "android_client_info": {
+          "package_name": "com.dustinshoemake.laugh_lab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425322934033-ba0rv2o736dpjdoku0ka6tsuhv22tb2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHgmtRqBvsXn2mbiLXyakuVeFL3kgH068"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425322934033-ba0rv2o736dpjdoku0ka6tsuhv22tb2l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
