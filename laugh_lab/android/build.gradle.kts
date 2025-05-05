@@ -1,4 +1,19 @@
+buildscript {
+    val kotlinVersion = "1.8.22" // Define the Kotlin version statically
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Use the defined variable
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
 allprojects {
+    // Ensure the kotlin_version property is set for subprojects
+    extra.set("kotlin_version", "1.8.22")
+
     repositories {
         google()
         mavenCentral()
