@@ -1,12 +1,11 @@
 # LaughLab Prompt README for Cursor AI Agent
 
 ## Overview
-LaughLab is a minimal, joke-sharing mobile app for iOS and Android, built by a solo software engineer with no budget, using Flutter, Firebase free tier, and Cursor’s AI Agent. The goal is to develop a sellable Minimum Viable Product (MVP) in 2.5–4.5 months (335–635 hours) to attract 500–1000 monthly active users (MAU) and sell for $2,000–$10,000 on Flippa. The app targets comedy fans with text-based jokes, collaborative features, and AI assistance, emphasizing clean code, simplicity, and unique features.
+LaughLab is a joke-sharing mobile app for iOS and Android, built by a solo software engineer with no budget, using Flutter, Firebase free tier, and Cursor’s AI Agent. 
 
 ## App Purpose
 - Allow users to create, share, and rate text-based jokes in a social, comedy-focused platform.
 - Include innovative features (Joke Remix Chain, AI Punchline Prompter) to differentiate from apps like Reddit or iFunny.
-- Drive engagement for 500–1000 MAU via organic marketing (X, Reddit) and sell with a strong Flippa pitch.
 
 ## Key Features
 1. **Joke Creation and Sharing**:
@@ -67,14 +66,11 @@ LaughLab is a minimal, joke-sharing mobile app for iOS and Android, built by a s
 - Flutter codebase with Firebase/ONNX, hosted on GitHub.
 - APK/IPA for testing.
 - README: Setup, features, Firebase guide.
-- Flippa pitch (500 words): Highlight 500–1000 MAU, remix chains, AI prompter, ad potential.
-- Marketing plan: 5 X/Reddit posts for 500–1000 MAU.
 
 ## Notes for Cursor AI
 - Reference this README before processing each prompt to ensure consistency.
 - Keep code clean, commented, and sellable for Flippa buyers.
 - Stay within Firebase free tier (1 GB storage, 20,000 DAU).
 - Prioritize simplicity, reliability, and engagement (remixes, AI).
-- If confused, focus on core features (joke creation, feed, profiles) and check this README for clarity.
 
 Last Updated: May 03, 2025
