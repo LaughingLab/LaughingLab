@@ -18,11 +18,32 @@ class CommentsSection extends StatefulWidget {
 
 class _CommentsSectionState extends State<CommentsSection> {
   final _commentController = TextEditingController();
+  final _focusNode = FocusNode();
   bool _isSubmitting = false;
   
   @override
+  void initState() {
+    super.initState();
+    // This ensures focus is maintained for the duration of editing
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    // If focus is lost unexpectedly, request it back after a short delay
+    if (!_focusNode.hasFocus) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted && _commentController.text.isNotEmpty) {
+          _focusNode.requestFocus();
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _commentController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
   
@@ -55,7 +76,8 @@ class _CommentsSectionState extends State<CommentsSection> {
       
       if (mounted) {
         _commentController.clear();
-        FocusScope.of(context).unfocus();
+        // Don't unfocus after submitting, just clear the text
+        // FocusScope.of(context).unfocus();
       }
     } catch (e) {
       if (mounted) {
@@ -107,7 +129,7 @@ class _CommentsSectionState extends State<CommentsSection> {
     
     return Container(
       padding: const EdgeInsets.all(16.0),
-      color: Colors.grey.shade50,
+      color: AppTheme.backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -128,16 +150,39 @@ class _CommentsSectionState extends State<CommentsSection> {
               children: [
                 // Comment text field
                 Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    maxLines: 3,
-                    minLines: 1,
-                    maxLength: AppConstants.maxCommentLength,
-                    decoration: const InputDecoration(
-                      hintText: 'Add a comment...',
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppTheme.cardColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade800),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _commentController,
+                      focusNode: _focusNode,
+                      maxLines: 3,
+                      minLines: 1,
+                      maxLength: AppConstants.maxCommentLength,
+                      decoration: InputDecoration(
+                        hintText: 'Add a comment...',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        border: InputBorder.none,
+                        counterText: '',
+                        hintStyle: TextStyle(color: AppTheme.secondaryTextColor),
+                        fillColor: AppTheme.cardColor,
+                        filled: true,
+                      ),
+                      style: const TextStyle(
+                        color: AppTheme.textColor,
                       ),
                     ),
                   ),

@@ -175,7 +175,39 @@ class JokeService with ChangeNotifier {
         final existingRating = RatingModel.fromMap(ratingDoc.data() as Map<String, dynamic>);
         
         if (existingRating.isUpvote == isUpvote) {
-          // Rating hasn't changed, do nothing
+          // User clicked the same button again, remove the rating
+          batch.delete(_firestore.collection(AppConstants.ratingsCollection).doc(ratingId));
+          
+          // Update joke's upvotes/downvotes count
+          final jokeRef = _firestore.collection(AppConstants.jokesCollection).doc(jokeId);
+          
+          if (isUpvote) {
+            batch.update(jokeRef, {
+              'upvotes': FieldValue.increment(-1),
+              'score': FieldValue.increment(-1),
+              'updatedAt': DateTime.now().millisecondsSinceEpoch,
+            });
+            
+            // Remove points for lost upvote (if not the joke author)
+            if (jokeAuthorId != user.uid) {
+              batch.update(
+                _firestore.collection(AppConstants.usersCollection).doc(jokeAuthorId),
+                {
+                  'points': FieldValue.increment(-AppConstants.pointsForUpvote),
+                  'updatedAt': DateTime.now().millisecondsSinceEpoch,
+                }
+              );
+            }
+          } else {
+            batch.update(jokeRef, {
+              'downvotes': FieldValue.increment(-1),
+              'score': FieldValue.increment(1),
+              'updatedAt': DateTime.now().millisecondsSinceEpoch,
+            });
+          }
+          
+          await batch.commit();
+          notifyListeners();
           return;
         }
         

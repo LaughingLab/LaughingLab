@@ -61,9 +61,19 @@ class _JokeCardState extends State<JokeCard> {
     try {
       await jokeService.rateJoke(widget.joke.id, isUpvote);
       
+      // Check if the user is removing their vote (clicking the same button)
+      bool? newRating;
+      if (_userRating == isUpvote) {
+        // User clicked the same button again, removing the vote
+        newRating = null;
+      } else {
+        // User is changing vote or adding a new vote
+        newRating = isUpvote;
+      }
+      
       if (mounted) {
         setState(() {
-          _userRating = isUpvote;
+          _userRating = newRating;
           _isRatingLoading = false;
         });
       }
