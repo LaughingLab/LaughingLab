@@ -95,6 +95,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // Logo
+                  Center(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      height: 220,
+                      width: 220,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
                   // Display name field
                   Container(
                     decoration: BoxDecoration(

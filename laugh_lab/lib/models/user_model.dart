@@ -34,10 +34,17 @@ class UserModel {
   }
 
   // Create a user from Firebase auth
-  factory UserModel.fromFirebase(String uid, String email) {
+  factory UserModel.fromFirebase(
+    String uid, 
+    String email, {
+    String? displayName,
+    String? photoUrl,
+  }) {
     return UserModel(
       id: uid,
       email: email,
+      displayName: displayName,
+      photoUrl: photoUrl,
       points: 0,
       preferredCategories: [],
       createdAt: DateTime.now(),

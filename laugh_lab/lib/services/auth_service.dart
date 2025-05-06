@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:laugh_lab/constants/app_constants.dart';
 import 'package:laugh_lab/models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   
   // Get the current user stream from Firebase Auth
   Stream<User?> get user => _auth.authStateChanges();
@@ -30,6 +32,52 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       return credential;
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Sign in with Google
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Begin interactive sign-in process
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      
+      // Obtain auth details from the request
+      if (googleUser == null) {
+        return null; // User canceled the sign-in flow
+      }
+      
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      
+      // Sign in with credential
+      final userCredential = await _auth.signInWithCredential(credential);
+      
+      // Check if it's a new user
+      if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+        // Create a new user document in Firestore
+        final user = UserModel.fromFirebase(
+          userCredential.user!.uid, 
+          userCredential.user!.email ?? '',
+          displayName: userCredential.user!.displayName,
+          photoUrl: userCredential.user!.photoURL,
+        );
+        
+        await _firestore
+            .collection(AppConstants.usersCollection)
+            .doc(user.id)
+            .set(user.toMap());
+      }
+      
+      notifyListeners();
+      return userCredential;
+    } catch (e) {
+      debugPrint('Error signing in with Google: $e');
       rethrow;
     }
   }
@@ -59,6 +107,11 @@ class AuthService with ChangeNotifier {
   // Sign out
   Future<void> signOut() async {
     try {
+      // Sign out from Google as well if signed in with Google
+      if (await _googleSignIn.isSignedIn()) {
+        await _googleSignIn.signOut();
+      }
+      
       await _auth.signOut();
       notifyListeners();
     } catch (e) {

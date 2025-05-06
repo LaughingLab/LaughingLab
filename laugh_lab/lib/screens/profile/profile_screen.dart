@@ -566,13 +566,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     StreamBuilder<List<JokeModel>>(
                       stream: jokeService.getJokesByUser(_userData!.id),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Handle loading state
+                        if (snapshot.connectionState == ConnectionState.waiting && 
+                            !snapshot.hasData) {
                           return const SizedBox(
                             height: 200,
                             child: Center(child: CircularProgressIndicator()),
                           );
                         }
                         
+                        // Handle error state
                         if (snapshot.hasError) {
                           return Center(
                             child: Text(
@@ -584,7 +587,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         
                         final jokes = snapshot.data ?? [];
                         
-                        if (jokes.isEmpty) {
+                        // Handle empty state - only show once we have proper data
+                        if (jokes.isEmpty && snapshot.connectionState != ConnectionState.waiting) {
                           return SizedBox(
                             height: 200,
                             child: Center(
@@ -618,6 +622,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         }
                         
+                        // Display jokes list
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

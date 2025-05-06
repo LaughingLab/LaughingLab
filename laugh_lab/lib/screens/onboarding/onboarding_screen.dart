@@ -119,84 +119,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       body: SafeArea(
-        child: Column(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (page) {
+            setState(() {
+              _currentPage = page;
+            });
+          },
           children: [
-            // Progress indicator
-            LinearProgressIndicator(
-              value: (_currentPage + 1) / _totalPages,
-              backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                AppTheme.primaryColor,
-              ),
-            ),
+            // Welcome page
+            _buildWelcomePage(),
             
-            // Page content
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                children: [
-                  // Welcome page
-                  _buildWelcomePage(),
-                  
-                  // Category selection page
-                  _buildCategorySelectionPage(),
-                ],
-              ),
-            ),
-            
-            // Navigation buttons
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Skip button (only on first page)
-                  _currentPage == 0
-                      ? TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text('Skip'),
-                        )
-                      : TextButton(
-                          onPressed: () {
-                            _pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          child: const Text('Back'),
-                        ),
-                  
-                  // Next/Finish button
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : _nextPage,
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            _currentPage == _totalPages - 1 ? 'Finish' : 'Next',
-                          ),
-                  ),
-                ],
-              ),
-            ),
+            // Category selection page
+            _buildCategorySelectionPage(),
           ],
         ),
       ),
@@ -209,6 +146,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Logo
+          Image.asset(
+            'assets/images/logo.png',
+            height: 220,
+            width: 220,
+          ),
+          const SizedBox(height: 24),
+          
           // App title
           const Text(
             'Welcome to LaughLab!',
@@ -232,29 +177,69 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 48),
           
-          // Login and register buttons
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+          // Login button
+          Container(
+            height: 55,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.accentColor.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-            child: const Text('Login'),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.accentColor,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.8,
+                ),
+              ),
+              child: const Text('LOGIN'),
+            ),
           ),
           const SizedBox(height: 16),
-          OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const RegisterScreen()),
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+          
+          // Register button
+          Container(
+            height: 55,
+            child: OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                foregroundColor: AppTheme.primaryColor,
+                side: const BorderSide(color: AppTheme.primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.8,
+                ),
+              ),
+              child: const Text('REGISTER'),
             ),
-            child: const Text('Register'),
           ),
           const SizedBox(height: 32),
           
@@ -267,6 +252,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 curve: Curves.easeInOut,
               );
             },
+            style: TextButton.styleFrom(
+              foregroundColor: AppTheme.primaryColor,
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             child: const Text('Continue as guest'),
           ),
         ],

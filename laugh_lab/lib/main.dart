@@ -128,13 +128,11 @@ class AuthWrapper extends StatelessWidget {
           );
         }
         
+        // Skip onboarding check and set it as completed
         final prefs = prefsSnapshot.data!;
-        final onboardingCompleted = prefs.getBool(AppConstants.onboardingCompletedKey) ?? false;
+        prefs.setBool(AppConstants.onboardingCompletedKey, true);
         
-        if (!onboardingCompleted) {
-          return const OnboardingScreen();
-        }
-        
+        // Go directly to login or main app based on authentication status
         return StreamBuilder(
           stream: authService.user,
           builder: (context, snapshot) {

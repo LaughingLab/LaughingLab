@@ -56,6 +56,32 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final userCredential = await authService.signInWithGoogle();
+      
+      // If userCredential is null, it means the user canceled the sign-in
+      if (userCredential == null && mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to sign in with Google. Please try again.';
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,31 +99,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Logo
                   Center(
                     child: Image.asset(
-                      'assets/images/FinalLogo.png',
-                      height: 180,
-                      width: 180,
+                      'assets/images/logo.png',
+                      height: 220,
+                      width: 220,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   
                   // App title
                   const Text(
-                    'LaughLab',
+                    'Share Your Best Jokes!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryColor,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Share Your Best Jokes',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: AppTheme.secondaryTextColor,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -242,6 +258,46 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : const Text('LOGIN'),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Google Sign-in Button
+                  Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _signInWithGoogle,
+                      icon: const Icon(
+                        Icons.g_mobiledata,
+                        size: 30,
+                        color: Colors.blue,
+                      ),
+                      label: const Text('CONTINUE WITH GOOGLE'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black87,
+                        disabledBackgroundColor: Colors.grey[300],
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),

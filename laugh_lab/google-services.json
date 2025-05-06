@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "425322934033-fajsqnos3kh217no6fhaqgruneerlt9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dustinshoemake.laugh_lab",
+            "certificate_hash": "fbdadd1ee1509f08b7f934e672ae2b5949491fa0"
+          }
+        },
+        {
           "client_id": "425322934033-ba0rv2o736dpjdoku0ka6tsuhv22tb2l.apps.googleusercontent.com",
           "client_type": 3
         }
