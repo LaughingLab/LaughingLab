@@ -270,18 +270,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     children: [
                                       TextField(
                                         controller: _displayNameController,
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           labelText: 'Display Name',
+                                          labelStyle: const TextStyle(
+                                            color: AppTheme.primaryColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          hintText: 'Enter your display name',
+                                          filled: true,
+                                          fillColor: AppTheme.cardColor.withOpacity(0.6),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: AppTheme.secondaryColor.withOpacity(0.5)),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 16),
                                       TextField(
                                         controller: _usernameController,
                                         decoration: InputDecoration(
                                           labelText: 'Username',
+                                          labelStyle: const TextStyle(
+                                            color: AppTheme.primaryColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                           hintText: 'Choose a unique username',
                                           helperText: 'Between ${AppConstants.minUsernameLength}-${AppConstants.maxUsernameLength} characters',
+                                          helperStyle: TextStyle(color: AppTheme.secondaryTextColor.withOpacity(0.8)),
+                                          filled: true,
+                                          fillColor: AppTheme.cardColor.withOpacity(0.6),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: AppTheme.secondaryColor.withOpacity(0.5)),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                          counterStyle: const TextStyle(color: AppTheme.secondaryTextColor),
                                         ),
                                         textAlign: TextAlign.center,
                                         maxLength: AppConstants.maxUsernameLength,
@@ -361,12 +394,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             _isEditing = false;
                                           });
                                         },
-                                        child: const Text('Cancel'),
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                            side: BorderSide(color: AppTheme.secondaryColor.withOpacity(0.5)),
+                                          ),
+                                          backgroundColor: AppTheme.cardColor,
+                                        ),
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            color: AppTheme.secondaryColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(width: 16),
                                       ElevatedButton(
                                         onPressed: _updateProfile,
-                                        child: const Text('Save'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppTheme.accentColor,
+                                          foregroundColor: AppTheme.primaryColor,
+                                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Save',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   )

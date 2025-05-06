@@ -8,6 +8,7 @@ import 'package:laugh_lab/services/joke_service.dart';
 import 'package:laugh_lab/services/comment_service.dart';
 import 'package:laugh_lab/services/user_service.dart';
 import 'package:laugh_lab/services/remix_service.dart';
+import 'package:laugh_lab/services/migration_service.dart';
 import 'package:laugh_lab/constants/app_theme.dart';
 import 'package:laugh_lab/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,11 @@ class MyApp extends StatelessWidget {
           update: (context, auth, userService, previous) => 
               RemixService(auth, userService),
         ),
+        Provider<MigrationService>(
+          create: (context) => MigrationService(
+            Provider.of<UserService>(context, listen: false),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'LaughLab',
@@ -98,6 +104,17 @@ class AuthWrapper extends StatelessWidget {
     // Initialize database structure
     WidgetsBinding.instance.addPostFrameCallback((_) {
       DatabaseInitializer.initializeDatabase(context);
+      
+      // Run username migration for remixes when a user is logged in
+      authService.user.listen((user) {
+        if (user != null) {
+          // User is logged in, update remixes with usernames
+          final migrationService = Provider.of<MigrationService>(context, listen: false);
+          migrationService.updateRemixesWithUsernames().catchError((error) {
+            print('Error during remix username migration: $error');
+          });
+        }
+      });
     });
     
     return FutureBuilder<SharedPreferences>(

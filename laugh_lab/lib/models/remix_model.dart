@@ -10,6 +10,7 @@ class RemixModel {
   final DateTime createdAt;
   final String? userDisplayName;
   final String? userPhotoUrl;
+  final String? username;
   
   RemixModel({
     required this.id,
@@ -21,6 +22,7 @@ class RemixModel {
     required this.createdAt,
     this.userDisplayName,
     this.userPhotoUrl,
+    this.username,
   });
   
   // Get score (upvotes - downvotes)
@@ -49,6 +51,9 @@ class RemixModel {
       'upvotes': upvotes,
       'downvotes': downvotes,
       'createdAt': createdAt.millisecondsSinceEpoch,
+      'userDisplayName': userDisplayName,
+      'userPhotoUrl': userPhotoUrl,
+      'username': username,
     };
   }
   
@@ -64,6 +69,7 @@ class RemixModel {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
       userDisplayName: map['userDisplayName'],
       userPhotoUrl: map['userPhotoUrl'],
+      username: map['username'],
     );
   }
   
@@ -78,6 +84,7 @@ class RemixModel {
     DateTime? createdAt,
     String? userDisplayName,
     String? userPhotoUrl,
+    String? username,
   }) {
     return RemixModel(
       id: id ?? this.id,
@@ -89,6 +96,7 @@ class RemixModel {
       createdAt: createdAt ?? this.createdAt,
       userDisplayName: userDisplayName ?? this.userDisplayName,
       userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+      username: username ?? this.username,
     );
   }
 } 

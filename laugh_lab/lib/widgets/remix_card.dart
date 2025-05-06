@@ -139,11 +139,26 @@ class _RemixCardState extends State<RemixCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.remix.userDisplayName ?? 'Anonymous',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              widget.remix.userDisplayName ?? 'Anonymous',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (widget.remix.username != null) ...[
+                              const SizedBox(width: 4),
+                              Text(
+                                '@${widget.remix.username}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppTheme.secondaryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                         Text(
                           timeago.format(widget.remix.createdAt),

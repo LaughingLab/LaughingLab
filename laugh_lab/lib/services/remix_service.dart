@@ -56,8 +56,9 @@ class RemixService with ChangeNotifier {
         upvotes: 0,
         downvotes: 0,
         createdAt: DateTime.now(),
-        userDisplayName: userData.displayName ?? userData.username ?? 'Anonymous',
+        userDisplayName: userData.displayName ?? 'Anonymous',
         userPhotoUrl: userData.photoUrl,
+        username: userData.username,
       );
       
       // Save the remix to Firestore

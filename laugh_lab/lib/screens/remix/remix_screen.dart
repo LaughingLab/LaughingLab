@@ -7,6 +7,7 @@ import 'package:laugh_lab/services/joke_service.dart';
 import 'package:laugh_lab/services/remix_service.dart';
 import 'package:laugh_lab/widgets/remix_card.dart';
 import 'package:laugh_lab/screens/remix/create_remix_screen.dart';
+import 'package:laugh_lab/services/migration_service.dart';
 
 class RemixScreen extends StatefulWidget {
   const RemixScreen({super.key});
@@ -45,6 +46,23 @@ class _RemixScreenState extends State<RemixScreen> with SingleTickerProviderStat
       appBar: AppBar(
         title: const Text('Remix'),
         elevation: 0,
+        actions: [
+          // Add refresh button that also runs the migration
+          IconButton(
+            icon: _isLoading 
+                ? const SizedBox(
+                    width: 20, 
+                    height: 20, 
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    )
+                  )
+                : const Icon(Icons.refresh),
+            tooltip: 'Refresh and update usernames',
+            onPressed: _isLoading ? null : () => _refreshAndMigrateUsernames(context),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white,
@@ -258,5 +276,50 @@ class _RemixScreenState extends State<RemixScreen> with SingleTickerProviderStat
         );
       },
     );
+  }
+
+  // Add this new function to run the migration and refresh
+  Future<void> _refreshAndMigrateUsernames(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      // Run the migration service
+      final migrationService = Provider.of<MigrationService>(context, listen: false);
+      debugPrint('Starting username and display name migration...');
+      await migrationService.updateRemixesWithUsernames();
+      
+      // Force reload by waiting a bit to let Firestore catch up
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Then let the user know we're done
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Remixes refreshed and usernames updated!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during refresh: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error refreshing: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 } 
