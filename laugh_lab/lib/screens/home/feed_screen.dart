@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:laugh_lab/constants/app_constants.dart';
+import 'package:laugh_lab/constants/app_theme.dart';
 import 'package:laugh_lab/models/joke_model.dart';
 import 'package:laugh_lab/services/joke_service.dart';
 import 'package:laugh_lab/services/auth_service.dart';
@@ -69,30 +70,31 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
         ),
         
         // Category filter
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              hintText: 'Filter by category',
-              prefixIcon: Icon(Icons.filter_list),
-            ),
-            value: _selectedCategory.isEmpty ? null : _selectedCategory,
-            items: [
-              const DropdownMenuItem<String>(
-                value: '',
-                child: Text('All Categories'),
+        Container(
+          height: 60,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
               ),
-              ...AppConstants.jokeCategories.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
             ],
-            onChanged: (value) {
-              setState(() {
-                _selectedCategory = value ?? '';
-              });
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: AppConstants.jokeCategories.length + 1, // +1 for "All" option
+            itemBuilder: (context, index) {
+              // First item is "All"
+              if (index == 0) {
+                return _buildCategoryChip("All", "");
+              }
+              
+              final category = AppConstants.jokeCategories[index - 1];
+              return _buildCategoryChip(category, category);
             },
           ),
         ),
@@ -162,6 +164,42 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCategoryChip(String label, String category) {
+    final isSelected = _selectedCategory == category;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedCategory = category;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.accentColor : AppTheme.cardColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected 
+                  ? AppTheme.accentColor 
+                  : AppTheme.secondaryColor.withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
     );
   }
 } 

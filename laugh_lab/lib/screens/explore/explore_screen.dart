@@ -20,10 +20,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Explore'),
-        elevation: 0,
-      ),
       body: Column(
         children: [
           // Category filter
@@ -43,7 +39,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       height: 60,
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -66,35 +62,44 @@ class _ExploreScreenState extends State<ExploreScreen> {
           return _buildCategoryChip(
             category, 
             category,
-            color: AppTheme.categoryColors[(index - 1) % AppTheme.categoryColors.length],
           );
         },
       ),
     );
   }
   
-  Widget _buildCategoryChip(String label, String? category, {Color? color}) {
+  Widget _buildCategoryChip(String label, String? category) {
     final isSelected = _selectedCategory == category;
-    
+
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        label: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        backgroundColor: color ?? Colors.grey[200],
-        selectedColor: color ?? AppTheme.primaryColor,
-        selected: isSelected,
-        onSelected: (selected) {
+      padding: const EdgeInsets.only(right: 12),
+      child: GestureDetector(
+        onTap: () {
           setState(() {
-            _selectedCategory = selected ? category : null;
+            _selectedCategory = isSelected ? null : category;
           });
         },
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.accentColor : AppTheme.cardColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected 
+                  ? AppTheme.accentColor 
+                  : AppTheme.secondaryColor.withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              fontSize: 14,
+            ),
+          ),
+        ),
       ),
     );
   }

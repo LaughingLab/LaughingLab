@@ -59,7 +59,7 @@ class _RemixCardState extends State<RemixCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {
@@ -86,7 +86,7 @@ class _RemixCardState extends State<RemixCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {
@@ -125,10 +125,10 @@ class _RemixCardState extends State<RemixCard> {
                         ? CachedNetworkImageProvider(widget.remix.userPhotoUrl!)
                         : null,
                     child: widget.remix.userPhotoUrl == null
-                        ? const Icon(
+                        ? Icon(
                             Icons.person,
                             size: 20,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSurface,
                           )
                         : null,
                   ),
@@ -193,26 +193,38 @@ class _RemixCardState extends State<RemixCard> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: AppTheme.cardColor.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
+                    border: Border.all(color: AppTheme.secondaryColor.withOpacity(0.5)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Original joke:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.format_quote,
+                            size: 16,
+                            color: AppTheme.accentColor,
+                          ),
+                          const SizedBox(width: 4),
+                          const Text(
+                            'Original joke:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
                       Text(
                         widget.originalJokeContent!,
                         style: const TextStyle(
                           fontStyle: FontStyle.italic,
+                          color: AppTheme.primaryColor,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -236,16 +248,16 @@ class _RemixCardState extends State<RemixCard> {
                 children: [
                   // Upvote
                   _buildVoteButton(
-                    icon: Icons.thumb_up,
-                    count: widget.remix.upvotes,
+                    icon: Icons.thumb_up, 
+                    count: widget.remix.upvotes, 
                     isSelected: _userVote == true,
                     onPressed: _handleUpvote,
                   ),
                   
                   // Downvote
                   _buildVoteButton(
-                    icon: Icons.thumb_down,
-                    count: widget.remix.downvotes,
+                    icon: Icons.thumb_down, 
+                    count: widget.remix.downvotes, 
                     isSelected: _userVote == false,
                     onPressed: _handleDownvote,
                   ),
@@ -256,15 +268,31 @@ class _RemixCardState extends State<RemixCard> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: AppTheme.cardColor,
                       borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Score: ${widget.remix.score}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                      border: Border.all(
+                        color: AppTheme.secondaryColor.withOpacity(0.3),
+                        width: 1,
                       ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.emoji_events,
+                          size: 14,
+                          color: AppTheme.primaryColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Score: ${widget.remix.score}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   
@@ -314,7 +342,7 @@ class _RemixCardState extends State<RemixCard> {
               color: isSelected
                   ? icon == Icons.thumb_up
                       ? AppTheme.primaryColor
-                      : AppTheme.errorColor
+                      : Theme.of(context).colorScheme.error
                   : Colors.grey[600],
             ),
             const SizedBox(width: 4),

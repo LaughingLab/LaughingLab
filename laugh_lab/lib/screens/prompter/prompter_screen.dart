@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:laugh_lab/constants/app_theme.dart';
+import 'package:laugh_lab/services/ai_punchline_service.dart';
 
 class PrompterScreen extends StatefulWidget {
   const PrompterScreen({super.key});
@@ -10,6 +12,7 @@ class PrompterScreen extends StatefulWidget {
 
 class _PrompterScreenState extends State<PrompterScreen> {
   final TextEditingController _setupController = TextEditingController();
+  final AIPunchlineService _aiService = AIPunchlineService();
   bool _isGenerating = false;
   List<String> _suggestedPunchlines = [];
   
@@ -19,8 +22,9 @@ class _PrompterScreenState extends State<PrompterScreen> {
     super.dispose();
   }
   
-  void _generatePunchlines() {
-    if (_setupController.text.trim().isEmpty) {
+  Future<void> _generatePunchlines() async {
+    final setup = _setupController.text.trim();
+    if (setup.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter a joke setup first'),
@@ -34,19 +38,58 @@ class _PrompterScreenState extends State<PrompterScreen> {
       _isGenerating = true;
     });
     
-    // Simulate AI generation with a delay
-    Future.delayed(const Duration(seconds: 2), () {
+    try {
+      // Use the AI service to generate punchlines
+      final punchlines = await _aiService.generatePunchlines(setup);
+      
       setState(() {
         _isGenerating = false;
-        _suggestedPunchlines = [
-          "This is a placeholder punchline!",
-          "AI will suggest better jokes soon...",
-          "Laughing is good for your health!",
-          "Stay tuned for real AI punchlines.",
-          "Coming soon: actual joke generation."
-        ];
+        _suggestedPunchlines = punchlines;
       });
-    });
+    } catch (e) {
+      setState(() {
+        _isGenerating = false;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error generating punchlines: ${e.toString()}'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+  
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Punchline copied to clipboard!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+  
+  void _usePunchline(String punchline) {
+    // Save feedback for future improvements
+    _aiService.saveFeedback(_setupController.text, punchline);
+    
+    // Navigate to the create screen with this setup and punchline
+    Navigator.of(context).pushNamed(
+      '/create', 
+      arguments: {
+        'setup': _setupController.text,
+        'punchline': punchline,
+        'is_ai_assisted': true,
+      },
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Punchline selected! Create your joke now.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
   
   @override
@@ -118,14 +161,7 @@ class _PrompterScreenState extends State<PrompterScreen> {
                             IconButton(
                               icon: const Icon(Icons.content_copy),
                               tooltip: 'Copy',
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Punchline copied to clipboard!'),
-                                    duration: Duration(seconds: 1),
-                                  ),
-                                );
-                              },
+                              onPressed: () => _copyToClipboard(_suggestedPunchlines[index]),
                             ),
                             IconButton(
                               icon: const Icon(
@@ -133,14 +169,7 @@ class _PrompterScreenState extends State<PrompterScreen> {
                                 color: AppTheme.primaryColor,
                               ),
                               tooltip: 'Use this',
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Feature coming soon!'),
-                                    duration: Duration(seconds: 1),
-                                  ),
-                                );
-                              },
+                              onPressed: () => _usePunchline(_suggestedPunchlines[index]),
                             ),
                           ],
                         ),

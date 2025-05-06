@@ -18,12 +18,12 @@ class ProfileImages {
   // Colors for avatar backgrounds
   static const List<Color> avatarColors = [
     Colors.blue,
-    Colors.red,
+    Colors.deepOrange,
     Colors.green,
     Colors.orange,
     Colors.purple,
     Colors.teal,
-    Colors.pink,
+    Colors.lime,
     Colors.indigo,
     Colors.amber,
     Colors.cyan,

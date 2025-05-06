@@ -13,70 +13,42 @@ import 'package:laugh_lab/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laugh_lab/constants/app_constants.dart';
 import 'package:laugh_lab/screens/onboarding/onboarding_screen.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:laugh_lab/screens/create/create_screen.dart';
+import 'package:laugh_lab/screens/prompter/prompter_screen.dart';
+import 'package:laugh_lab/screens/splash/splash_screen.dart';
+import 'package:laugh_lab/utils/database_initializer.dart';
 
-// Global variable to prevent multiple initialization attempts
-bool _firebaseInitialized = false;
+// No longer needed
+// bool _firebaseInitialized = false;
 
-void main() {
-  // Make app run synchronously
+// Make main asynchronous
+Future<void> main() async {
+  // Ensure bindings are initialized FIRST
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Start with a simple loading screen while Firebase initializes
-  runApp(const AppLoader());
-}
 
-class AppLoader extends StatefulWidget {
-  const AppLoader({super.key});
-
-  @override
-  State<AppLoader> createState() => _AppLoaderState();
-}
-
-class _AppLoaderState extends State<AppLoader> {
-  // For handling errors during initialization
-  String? _errorMessage;
-  
-  @override
-  void initState() {
-    super.initState();
-    _initializeApp();
-  }
-  
-  // Initialize Firebase and then launch the main app
-  Future<void> _initializeApp() async {
-    try {
-      if (!_firebaseInitialized) {
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
-        _firebaseInitialized = true;
-      }
-      
-      if (mounted) {
-        // Replace the loading screen with the actual app
-        runApp(const MyApp());
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = e.toString();
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: _errorMessage != null
-              ? Text('Error: $_errorMessage')
-              : const CircularProgressIndicator(),
-        ),
-      ),
+  // Initialize Firebase only ONCE here
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
     );
+    // Activate App Check AFTER Firebase init
+    await FirebaseAppCheck.instance.activate(
+      // For testing, use AndroidProvider.debug
+      // For release, use AndroidProvider.playIntegrity
+      // TODO: Switch to playIntegrity for release builds
+      androidProvider: AndroidProvider.debug, 
+      // appleProvider: AppleProvider.appAttest, // If targeting iOS
+    );
+  } catch (e) {
+    // Handle initialization error, maybe show a simple error screen
+    // or log the error. For now, just print it.
+    print('Failed to initialize Firebase or App Check: $e');
+    // Optionally run an error app: runApp(ErrorApp(e)); return;
   }
+
+  // Run the main app after initialization
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -105,8 +77,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'LaughLab',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const AuthWrapper(),
+        theme: AppTheme.darkTheme,
+        home: SplashScreen(nextScreen: const AuthWrapper()),
+        routes: {
+          '/create': (context) => const CreateScreen(),
+          '/prompter': (context) => const PrompterScreen(),
+        },
       ),
     );
   }
@@ -118,6 +94,11 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    
+    // Initialize database structure
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DatabaseInitializer.initializeDatabase(context);
+    });
     
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
