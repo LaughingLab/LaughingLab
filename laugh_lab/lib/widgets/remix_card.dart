@@ -193,26 +193,38 @@ class _RemixCardState extends State<RemixCard> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: AppTheme.cardColor.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
+                    border: Border.all(color: AppTheme.secondaryColor.withOpacity(0.5)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Original joke:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.format_quote,
+                            size: 16,
+                            color: AppTheme.accentColor,
+                          ),
+                          const SizedBox(width: 4),
+                          const Text(
+                            'Original joke:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
                       Text(
                         widget.originalJokeContent!,
                         style: const TextStyle(
                           fontStyle: FontStyle.italic,
+                          color: AppTheme.primaryColor,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -256,15 +268,31 @@ class _RemixCardState extends State<RemixCard> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: AppTheme.cardColor,
                       borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Score: ${widget.remix.score}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                      border: Border.all(
+                        color: AppTheme.secondaryColor.withOpacity(0.3),
+                        width: 1,
                       ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.emoji_events,
+                          size: 14,
+                          color: AppTheme.primaryColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Score: ${widget.remix.score}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   

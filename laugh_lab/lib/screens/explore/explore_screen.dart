@@ -70,38 +70,36 @@ class _ExploreScreenState extends State<ExploreScreen> {
   
   Widget _buildCategoryChip(String label, String? category) {
     final isSelected = _selectedCategory == category;
-    final theme = Theme.of(context); // Get theme data
 
     return Padding(
       padding: const EdgeInsets.only(right: 12),
-      child: FilterChip(
-        label: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : theme.colorScheme.onSurfaceVariant, 
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            fontSize: 13,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.surfaceVariant,
-        selectedColor: AppTheme.primaryColor,
-        selected: isSelected,
-        onSelected: (selected) {
+      child: GestureDetector(
+        onTap: () {
           setState(() {
-            _selectedCategory = selected ? category : null;
+            _selectedCategory = isSelected ? null : category;
           });
         },
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: isSelected ? Colors.transparent : theme.colorScheme.outline.withOpacity(0.3),
-            width: 1,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.accentColor : AppTheme.cardColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected 
+                  ? AppTheme.accentColor 
+                  : AppTheme.secondaryColor.withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              fontSize: 14,
+            ),
           ),
         ),
-        elevation: isSelected ? 2 : 0,
-        pressElevation: 4,
-        showCheckmark: false,
       ),
     );
   }

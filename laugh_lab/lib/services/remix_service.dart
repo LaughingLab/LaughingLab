@@ -56,7 +56,7 @@ class RemixService with ChangeNotifier {
         upvotes: 0,
         downvotes: 0,
         createdAt: DateTime.now(),
-        userDisplayName: userData.displayName,
+        userDisplayName: userData.displayName ?? userData.username ?? 'Anonymous',
         userPhotoUrl: userData.photoUrl,
       );
       

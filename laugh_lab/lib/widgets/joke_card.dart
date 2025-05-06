@@ -134,17 +134,21 @@ class _JokeCardState extends State<JokeCard> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.error,
-                              borderRadius: BorderRadius.circular(4),
+                              color: AppTheme.cardColor,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppTheme.secondaryColor.withOpacity(0.3),
+                                width: 1,
+                              ),
                             ),
                             child: Text(
                               widget.joke.category,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onError,
+                              style: const TextStyle(
+                                color: Colors.white,
                                 fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
