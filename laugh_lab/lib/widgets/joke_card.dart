@@ -97,7 +97,8 @@ class _JokeCardState extends State<JokeCard> {
               children: [
                 // Author avatar
                 CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor,
+                  backgroundColor: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                  foregroundColor: AppTheme.primaryColor,
                   child: Text(
                     widget.joke.authorName.isNotEmpty
                         ? widget.joke.authorName[0].toUpperCase()
@@ -123,12 +124,31 @@ class _JokeCardState extends State<JokeCard> {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        '${timeago.format(widget.joke.createdAt)} • ${widget.joke.category}',
-                        style: const TextStyle(
-                          color: AppTheme.secondaryTextColor,
-                          fontSize: 12,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            '${timeago.format(widget.joke.createdAt)} • ',
+                            style: const TextStyle(
+                              color: AppTheme.secondaryTextColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.error,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              widget.joke.category,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onError,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -188,7 +208,7 @@ class _JokeCardState extends State<JokeCard> {
                         color: widget.joke.score > 0
                             ? Colors.green
                             : widget.joke.score < 0
-                                ? Colors.red
+                                ? Theme.of(context).colorScheme.error
                                 : AppTheme.secondaryTextColor,
                         fontWeight: FontWeight.bold,
                       ),
@@ -199,8 +219,8 @@ class _JokeCardState extends State<JokeCard> {
                       icon: Icon(
                         Icons.arrow_downward,
                         color: _userRating == false
-                            ? Colors.red
-                            : AppTheme.secondaryTextColor,
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.onSurface,
                       ),
                       onPressed: _isRatingLoading
                           ? null
@@ -211,7 +231,7 @@ class _JokeCardState extends State<JokeCard> {
                 
                 // Comment button and count
                 TextButton.icon(
-                  icon: const Icon(Icons.comment),
+                  icon: Icon(Icons.comment, color: Theme.of(context).colorScheme.onSurface),
                   label: Text(
                     '${widget.joke.commentCount} comments',
                   ),

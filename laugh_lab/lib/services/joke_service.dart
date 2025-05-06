@@ -20,6 +20,7 @@ class JokeService with ChangeNotifier {
   Future<JokeModel> createJoke({
     required String content,
     required String category,
+    bool isAIAssisted = false,
   }) async {
     try {
       final user = _auth.currentUser;
@@ -40,14 +41,27 @@ class JokeService with ChangeNotifier {
         downvotes: 0,
         score: 0,
         commentCount: 0,
+        isAIAssisted: isAIAssisted,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       await jokeRef.set(joke.toMap());
       
-      // Add points for creating a joke
-      await _authService.updateUserPoints(AppConstants.pointsForNewJoke);
+      // Record AI-assisted posts if applicable
+      if (isAIAssisted) {
+        await _firestore.collection(AppConstants.aiPostsCollection).doc(jokeRef.id).set({
+          'jokeId': jokeRef.id,
+          'userId': user.uid,
+          'createdAt': DateTime.now().millisecondsSinceEpoch,
+        });
+        
+        // Add extra points for using AI
+        await _authService.updateUserPoints(AppConstants.pointsForAIPost);
+      } else {
+        // Add regular points for creating a joke
+        await _authService.updateUserPoints(AppConstants.pointsForNewJoke);
+      }
 
       return joke;
     } catch (e) {

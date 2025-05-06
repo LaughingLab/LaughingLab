@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laugh_lab/constants/app_constants.dart';
 import 'package:laugh_lab/screens/onboarding/onboarding_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:laugh_lab/screens/create/create_screen.dart';
+import 'package:laugh_lab/screens/prompter/prompter_screen.dart';
 
 // No longer needed
 // bool _firebaseInitialized = false;
@@ -73,8 +75,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'LaughLab',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: const AuthWrapper(),
+        routes: {
+          '/create': (context) => const CreateScreen(),
+          '/prompter': (context) => const PrompterScreen(),
+        },
       ),
     );
   }

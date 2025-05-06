@@ -176,8 +176,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          // Load user stats
-          _loadUserStats();
+          // Load user stats only after user data is available
+          // and only if stats haven't been loaded yet or user data changed.
+          // This check might need refinement depending on how often stats should refresh.
+          if (_userStats['totalJokes'] == 0 && _userStats['totalUpvotes'] == 0) { // Basic check
+            _loadUserStats();
+          }
 
           return Padding(
             padding: const EdgeInsets.all(16.0),

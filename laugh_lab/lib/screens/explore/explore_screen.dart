@@ -20,10 +20,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Explore'),
-        elevation: 0,
-      ),
       body: Column(
         children: [
           // Category filter
@@ -43,7 +39,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       height: 60,
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -66,35 +62,46 @@ class _ExploreScreenState extends State<ExploreScreen> {
           return _buildCategoryChip(
             category, 
             category,
-            color: AppTheme.categoryColors[(index - 1) % AppTheme.categoryColors.length],
           );
         },
       ),
     );
   }
   
-  Widget _buildCategoryChip(String label, String? category, {Color? color}) {
+  Widget _buildCategoryChip(String label, String? category) {
     final isSelected = _selectedCategory == category;
-    
+    final theme = Theme.of(context); // Get theme data
+
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.only(right: 12),
       child: FilterChip(
         label: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected ? Colors.white : theme.colorScheme.onSurfaceVariant, 
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 13,
           ),
         ),
-        backgroundColor: color ?? Colors.grey[200],
-        selectedColor: color ?? AppTheme.primaryColor,
+        backgroundColor: theme.colorScheme.surfaceVariant,
+        selectedColor: AppTheme.primaryColor,
         selected: isSelected,
         onSelected: (selected) {
           setState(() {
             _selectedCategory = selected ? category : null;
           });
         },
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: isSelected ? Colors.transparent : theme.colorScheme.outline.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        elevation: isSelected ? 2 : 0,
+        pressElevation: 4,
+        showCheckmark: false,
       ),
     );
   }

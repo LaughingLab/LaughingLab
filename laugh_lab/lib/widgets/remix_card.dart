@@ -59,7 +59,7 @@ class _RemixCardState extends State<RemixCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {
@@ -86,7 +86,7 @@ class _RemixCardState extends State<RemixCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {
@@ -125,10 +125,10 @@ class _RemixCardState extends State<RemixCard> {
                         ? CachedNetworkImageProvider(widget.remix.userPhotoUrl!)
                         : null,
                     child: widget.remix.userPhotoUrl == null
-                        ? const Icon(
+                        ? Icon(
                             Icons.person,
                             size: 20,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSurface,
                           )
                         : null,
                   ),
@@ -236,16 +236,16 @@ class _RemixCardState extends State<RemixCard> {
                 children: [
                   // Upvote
                   _buildVoteButton(
-                    icon: Icons.thumb_up,
-                    count: widget.remix.upvotes,
+                    icon: Icons.thumb_up, 
+                    count: widget.remix.upvotes, 
                     isSelected: _userVote == true,
                     onPressed: _handleUpvote,
                   ),
                   
                   // Downvote
                   _buildVoteButton(
-                    icon: Icons.thumb_down,
-                    count: widget.remix.downvotes,
+                    icon: Icons.thumb_down, 
+                    count: widget.remix.downvotes, 
                     isSelected: _userVote == false,
                     onPressed: _handleDownvote,
                   ),
@@ -314,7 +314,7 @@ class _RemixCardState extends State<RemixCard> {
               color: isSelected
                   ? icon == Icons.thumb_up
                       ? AppTheme.primaryColor
-                      : AppTheme.errorColor
+                      : Theme.of(context).colorScheme.error
                   : Colors.grey[600],
             ),
             const SizedBox(width: 4),

@@ -6,6 +6,7 @@ import 'package:laugh_lab/screens/explore/explore_screen.dart';
 import 'package:laugh_lab/screens/profile/profile_screen.dart';
 import 'package:laugh_lab/screens/remix/remix_screen.dart';
 import 'package:laugh_lab/screens/prompter/prompter_screen.dart';
+import 'package:laugh_lab/constants/app_theme.dart';
 
 class AppNavigation extends StatefulWidget {
   const AppNavigation({super.key});
@@ -33,40 +34,49 @@ class _AppNavigationState extends State<AppNavigation> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed, // Needed for more than 3 items
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: AppConstants.homeScreen,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: AppConstants.createScreen,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: AppConstants.exploreScreen,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: AppConstants.profileScreen,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.repeat),
-            label: AppConstants.remixScreen,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb_outline),
-            label: AppConstants.prompterScreen,
-          ),
-        ],
+      bottomNavigationBar: Theme(
+        // Apply a theme override to ensure consistent styling
+        data: Theme.of(context).copyWith(
+          canvasColor: AppTheme.cardColor, // Ensure dark background
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed, // Needed for more than 3 items
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: AppConstants.homeScreen,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline),
+              label: AppConstants.createScreen,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: AppConstants.exploreScreen,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: AppConstants.profileScreen,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.repeat),
+              label: AppConstants.remixScreen,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.lightbulb_outline),
+              label: AppConstants.prompterScreen,
+            ),
+          ],
+          // Explicitly set colors to ensure consistency
+          selectedItemColor: AppTheme.accentColor, 
+          unselectedItemColor: AppTheme.secondaryTextColor,
+        ),
       ),
     );
   }

@@ -9,6 +9,7 @@ class JokeModel {
   final int downvotes;
   final int score;
   final int commentCount;
+  final bool isAIAssisted;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -23,6 +24,7 @@ class JokeModel {
     required this.downvotes,
     required this.score,
     required this.commentCount,
+    this.isAIAssisted = false,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,6 +41,7 @@ class JokeModel {
       downvotes: 0,
       score: 0,
       commentCount: 0,
+      isAIAssisted: false,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -57,6 +60,7 @@ class JokeModel {
       'downvotes': downvotes,
       'score': score,
       'commentCount': commentCount,
+      'isAIAssisted': isAIAssisted,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
@@ -75,6 +79,7 @@ class JokeModel {
       downvotes: map['downvotes'] ?? 0,
       score: map['score'] ?? 0,
       commentCount: map['commentCount'] ?? 0,
+      isAIAssisted: map['isAIAssisted'] ?? false,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] ?? 0),
     );
@@ -92,6 +97,7 @@ class JokeModel {
     int? downvotes,
     int? score,
     int? commentCount,
+    bool? isAIAssisted,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -106,6 +112,7 @@ class JokeModel {
       downvotes: downvotes ?? this.downvotes,
       score: score ?? this.score,
       commentCount: commentCount ?? this.commentCount,
+      isAIAssisted: isAIAssisted ?? this.isAIAssisted,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
