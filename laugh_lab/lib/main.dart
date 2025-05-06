@@ -17,6 +17,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:laugh_lab/screens/create/create_screen.dart';
 import 'package:laugh_lab/screens/prompter/prompter_screen.dart';
 import 'package:laugh_lab/screens/splash/splash_screen.dart';
+import 'package:laugh_lab/utils/database_initializer.dart';
 
 // No longer needed
 // bool _firebaseInitialized = false;
@@ -93,6 +94,11 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    
+    // Initialize database structure
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DatabaseInitializer.initializeDatabase(context);
+    });
     
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),

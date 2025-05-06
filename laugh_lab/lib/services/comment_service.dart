@@ -11,6 +11,34 @@ class CommentService with ChangeNotifier {
   // Get the current user ID or empty string if not logged in
   String get currentUserId => _auth.currentUser?.uid ?? '';
 
+  // Initialize database structure with a test comment
+  Future<void> initializeCommentCollection(String jokeId) async {
+    try {
+      // Check if collection exists
+      final testCommentRef = _firestore.collection(AppConstants.commentsCollection).doc('test_comment');
+      
+      // Create a test comment with all required fields
+      final testComment = CommentModel(
+        id: 'test_comment',
+        jokeId: jokeId,
+        userId: 'test_user',
+        authorName: 'Test User',
+        authorPhotoUrl: AppConstants.defaultAvatarUrl,
+        content: 'This is a test comment to set up the database structure.',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      
+      // Add the test comment to Firestore
+      await testCommentRef.set(testComment.toMap());
+      
+      print('Test comment created with all required fields');
+    } catch (e) {
+      print('Error initializing comment collection: $e');
+      rethrow;
+    }
+  }
+
   // Create a new comment
   Future<CommentModel> createComment(String jokeId, String content) async {
     try {
