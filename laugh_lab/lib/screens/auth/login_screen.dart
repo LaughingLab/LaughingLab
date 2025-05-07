@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:laugh_lab/services/auth_service.dart';
 import 'package:laugh_lab/screens/auth/register_screen.dart';
 import 'package:laugh_lab/constants/app_theme.dart';
+import 'package:laugh_lab/services/facebook_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -79,6 +80,35 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _signInWithFacebook() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+    try {
+      final facebookUser = await FacebookAuthService().login();
+      if (facebookUser == null && mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      // You may want to handle user data here, e.g., save to Firestore or update UI
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to sign in with Facebook. Please try again.';
+          _isLoading = false;
+        });
+      }
+    }
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -287,6 +317,45 @@ class _LoginScreenState extends State<LoginScreen> {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black87,
                         disabledBackgroundColor: Colors.grey[300],
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Facebook Sign-in Button
+                  Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _signInWithFacebook,
+                      icon: const Icon(
+                        Icons.facebook,
+                        size: 28,
+                        color: Color(0xFF4267B2), // Facebook blue
+                      ),
+                      label: const Text('CONTINUE WITH FACEBOOK'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black87,
+                        disabledBackgroundColor: Colors.grey,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(

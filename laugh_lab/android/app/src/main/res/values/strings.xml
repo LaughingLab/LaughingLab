@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Laugh Lab</string>
+    <string name="facebook_app_id">670223785748974</string>
+    <string name="fb_login_protocol_scheme">fb670223785748974</string>
+    <string name="facebook_client_token">cd4bb8b294d8d6e5631f9c53d1ea3a23</string>
+</resources> 

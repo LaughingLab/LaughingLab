@@ -64,15 +64,21 @@ class AppTheme {
       ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: cardColor, // Dark Grey for AppBar
-      elevation: 0,
+      backgroundColor: cardColor, // Back to original Dark Grey for AppBar
+      elevation: 2.0, // Keeping subtle elevation for professional look
       centerTitle: true,
+      titleSpacing: 16.0, // Consistent spacing
+      toolbarHeight: 56.0, // Standard height for consistency
       titleTextStyle: GoogleFonts.roboto(
         color: textColor, // White title
         fontSize: 20.0,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600, // Slightly less bold for cleaner look
+        letterSpacing: 0.5, // Improved letter spacing for readability
       ),
-      iconTheme: const IconThemeData(color: textColor), // White icons
+      iconTheme: const IconThemeData(
+        color: textColor, // White icons
+        size: 24.0, // Standard icon size
+      ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: accentColor, // Red FAB
@@ -173,9 +179,21 @@ class AppTheme {
     tabBarTheme: const TabBarTheme(
       labelColor: primaryColor, // White selected tab label
       unselectedLabelColor: secondaryTextColor, // Light Grey unselected tab label
+      labelStyle: TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.3,
+      ),
+      unselectedLabelStyle: TextStyle(
+        fontSize: 16.0,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.3,
+      ),
       indicator: UnderlineTabIndicator(
         borderSide: BorderSide(color: primaryColor, width: 2.0),
+        insets: EdgeInsets.symmetric(horizontal: 16.0),
       ),
+      indicatorSize: TabBarIndicatorSize.label,
     ),
   );
 } 

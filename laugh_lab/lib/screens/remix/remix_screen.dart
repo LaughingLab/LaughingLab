@@ -45,7 +45,8 @@ class _RemixScreenState extends State<RemixScreen> with SingleTickerProviderStat
     return Scaffold(
       appBar: AppBar(
         title: const Text('Remix'),
-        elevation: 0,
+        elevation: 2.0,
+        titleSpacing: 16.0,
         actions: [
           // Add refresh button that also runs the migration
           IconButton(
@@ -65,8 +66,11 @@ class _RemixScreenState extends State<RemixScreen> with SingleTickerProviderStat
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white.withOpacity(0.7),
+          labelColor: AppTheme.primaryColor,
+          unselectedLabelColor: AppTheme.secondaryTextColor,
+          indicator: const UnderlineTabIndicator(
+            borderSide: BorderSide(color: AppTheme.primaryColor, width: 2.0),
+          ),
           tabs: const [
             Tab(text: 'Recent'),
             Tab(text: 'Top Rated'),

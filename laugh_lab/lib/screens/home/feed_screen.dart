@@ -55,18 +55,24 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
     return Column(
       children: [
         // Tab bar for Recent/Top Jokes
-        TabBar(
-          controller: _tabController,
-          labelColor: Theme.of(context).primaryColor,
-          unselectedLabelColor: Colors.grey,
-          tabs: const [
-            Tab(text: 'Recent'),
-            Tab(text: 'Top Rated'),
-          ],
-          onTap: (_) {
-            // Force refresh when tab changes
-            setState(() {});
-          },
+        Container(
+          color: AppTheme.cardColor, // Match AppBar background color
+          child: TabBar(
+            controller: _tabController,
+            labelColor: Theme.of(context).primaryColor,
+            unselectedLabelColor: Colors.grey,
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(color: AppTheme.primaryColor, width: 2.0),
+            ),
+            tabs: const [
+              Tab(text: 'Recent'),
+              Tab(text: 'Top Rated'),
+            ],
+            onTap: (_) {
+              // Force refresh when tab changes
+              setState(() {});
+            },
+          ),
         ),
         
         // Category filter
